@@ -1,28 +1,12 @@
 import sys
-
 from PySide6.QtWidgets import (
-    QApplication,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QWidget,
-    QLabel,
-    QComboBox,
-    QCheckBox,
-    QLineEdit,
-    QGridLayout
+    QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel,
+    QComboBox, QCheckBox, QLineEdit, QGridLayout
 )
-from PySide6.QtGui import (
-    QPixmap
-)
-
-
+from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import QIcon
 from interfaces.home.home import Home
-
-import  locale
-
+import locale
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
@@ -35,6 +19,8 @@ users = [
 ]
 
 users = sorted(users, key=lambda user: user["name"])
+
+
 
 class Login(QWidget):
     def __init__(self):
@@ -55,14 +41,14 @@ class Login(QWidget):
         self.toggle_visibility_button.setStyleSheet("border: none; padding-right: 10px;")
 
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(25,50,25, 40)
+        main_layout.setContentsMargins(25, 50, 25, 40)
 
         self.image_logo = QLabel(self)
         logo = QPixmap(r"C:\Users\Wesllei Brito\PycharmProjects\aso_3.0\images\Blue_Flat_Illustrative_Human_Artificial_Intelligence_Technology_Logo-removebg-preview.png")
         self.image_logo.setPixmap(logo.scaled(130, 130))
 
         access_layout = QVBoxLayout()
-        access_layout.setContentsMargins(0,20,0,0)
+        access_layout.setContentsMargins(0, 20, 0, 0)
         self.combo_user = QComboBox()
         self.combo_user.setFixedSize(300, 40)
         self.combo_user.setStyleSheet("QComboBox { padding: 10px; font-weight: Bold; font-size: 14px}")
@@ -90,14 +76,12 @@ class Login(QWidget):
         button_layout.addWidget(button_enter, alignment=Qt.AlignmentFlag.AlignLeft)
         button_layout.addWidget(button_cancel)
 
-
         button_enter.setFixedSize(130, 40)
         button_cancel.setFixedSize(100, 40)
 
         access_layout.addWidget(self.combo_user)
         access_layout.addLayout(password_layout)
         access_layout.addLayout(button_layout)
-
 
         self.check_memorize = QCheckBox("Relembrar meu usuário?")
         self.check_memorize.stateChanged.connect(self.on_memorize)
@@ -110,7 +94,6 @@ class Login(QWidget):
 
     def selected_user(self):
         return self.combo_user.currentData()
-
 
     def on_memorize(self) -> int:
         if self.check_memorize.isChecked():
@@ -126,6 +109,7 @@ class Login(QWidget):
             self.toggle_visibility_button.setIcon(QIcon(
                 r"C:\Users\Wesllei Brito\PycharmProjects\aso_3.0\icons\visibility_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg"))
         self.__visible = not self.__visible
+        self.password.setFocus()
 
     def login(self):
         selected_id = self.combo_user.currentData()
@@ -150,6 +134,15 @@ class Login(QWidget):
 
         # Fecha a janela de login (garante que ela não afete a próxima janela)
         self.close()
+
+    # Aqui está o método para capturar a tecla Enter ou Return
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            self.login()  # Executa a função de login
+        else:
+            super().keyPressEvent(event)  # Chama o evento padrão para outras teclas
+
+
 
 app = QApplication(sys.argv)
 app.setWindowIcon(QIcon(r"C:\Users\Wesllei Brito\PycharmProjects\aso_3.0\icons\acordo.ico"))
