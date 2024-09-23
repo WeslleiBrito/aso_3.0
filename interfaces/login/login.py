@@ -19,6 +19,7 @@ from PySide6.QtGui import (
 
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QIcon
+from interfaces.home.home import Home
 
 import  locale
 
@@ -26,11 +27,11 @@ import  locale
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 users = [
-    {"id": 1, "name": "Wesllei"},
-    {"id": 2, "name": "Antonio"},
-    {"id": 3, "name": "Ravena"},
-    {"id": 4, "name": "Andressa"},
-    {"id": 5, "name": "Melissa"}
+    {"id": 1, "name": "Wesllei", "password": "senha1"},
+    {"id": 2, "name": "Antonio", "password": "senha2"},
+    {"id": 3, "name": "Ravena", "password": "senha3"},
+    {"id": 4, "name": "Andressa", "password": "senha4"},
+    {"id": 5, "name": "Melissa", "password": "senha5"}
 ]
 
 users = sorted(users, key=lambda user: user["name"])
@@ -84,6 +85,8 @@ class Login(QWidget):
         button_enter = QPushButton("Entrar")
         button_cancel = QPushButton("Cancelar")
 
+        button_enter.clicked.connect(self.login)
+        button_cancel.clicked.connect(self.close)
         button_layout.addWidget(button_enter, alignment=Qt.AlignmentFlag.AlignLeft)
         button_layout.addWidget(button_cancel)
 
@@ -124,6 +127,29 @@ class Login(QWidget):
                 r"C:\Users\Wesllei Brito\PycharmProjects\aso_3.0\icons\visibility_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg"))
         self.__visible = not self.__visible
 
+    def login(self):
+        selected_id = self.combo_user.currentData()
+        password = self.password.text()
+
+        # Verifica as credenciais
+        for user in users:
+            if user["id"] == selected_id and user["password"] == password:
+                self.open_system_window()
+                self.close()  # Fecha a janela de login
+                return
+
+    def close_login(self):
+        self.close()
+
+    def open_system_window(self):
+        # Cria uma nova instância da classe Home
+        self.home_window = Home()
+
+        # Exibe a tela principal de forma independente
+        self.home_window.show()
+
+        # Fecha a janela de login (garante que ela não afete a próxima janela)
+        self.close()
 
 app = QApplication(sys.argv)
 app.setWindowIcon(QIcon(r"C:\Users\Wesllei Brito\PycharmProjects\aso_3.0\icons\acordo.ico"))
